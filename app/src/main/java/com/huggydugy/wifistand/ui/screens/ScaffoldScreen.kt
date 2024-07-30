@@ -1,6 +1,7 @@
 package com.huggydugy.wifistand.ui.screens
 
 import android.icu.text.IDNA.Info
+import android.util.Log
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -48,6 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -60,6 +62,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.huggydugy.wifistand.ui.navgraph.NavHostApp
 import com.huggydugy.wifistand.ui.navgraph.Screen
+import com.huggydugy.wifistand.ui.theme.Purple40
 
 @Composable
 fun ScaffoldScreen(
@@ -189,4 +192,263 @@ private fun RowScope.AddItem(
             }
         },
     )
+}
+@Composable
+fun MovingCirclesDemo() {
+    val positions = listOf(
+        0.dp to 0.dp,  // Top position
+        100.dp to 0.dp, // Right position
+        100.dp to 100.dp, // Bottom position
+        0.dp to 100.dp // Left position
+    )
+
+    var circlePositions by remember { mutableStateOf(listOf(0, 1, 2, 3)) }
+
+    fun moveCircles() {
+        circlePositions = circlePositions.map { (it + 1) % 4 }
+    }
+
+    circlePositions.forEachIndexed { index, positionIndex ->
+        val (x, y) = positions[positionIndex]
+        val animatedOffsetX by animateDpAsState(targetValue = x, animationSpec = tween(durationMillis = 300))
+        val animatedOffsetY by animateDpAsState(targetValue = y, animationSpec = tween(durationMillis = 300))
+
+        Box(
+            modifier = Modifier
+                .size(50.dp)
+                .offset(x = animatedOffsetX, y = animatedOffsetY)
+                .clip(RoundedCornerShape(100))
+                .background(Color.Blue)
+                .clickable { moveCircles() }
+        )
+    }
+}
+
+@Composable
+fun MovingCircleDemo() {
+    var offsetX by remember { mutableStateOf(0.dp) }
+    var offsetY by remember { mutableStateOf(0.dp) }
+    var offsetX1 by remember { mutableStateOf(0.dp) }
+    var offsetY1 by remember { mutableStateOf(0.dp) }
+    var offsetX2 by remember { mutableStateOf(0.dp) }
+    var offsetY2 by remember { mutableStateOf(0.dp) }
+    val animatedOffsetX by animateDpAsState(
+        targetValue = offsetX,
+        animationSpec = tween(durationMillis = 300)
+    )
+    val animatedOffsetY by animateDpAsState(
+        targetValue = offsetY,
+        animationSpec = tween(durationMillis = 300)
+    )
+    val animatedOffsetX1 by animateDpAsState(
+        targetValue = offsetX1,
+        animationSpec = tween(durationMillis = 300)
+    )
+    val animatedOffsetY1 by animateDpAsState(
+        targetValue = offsetY1,
+        animationSpec = tween(durationMillis = 300)
+    )
+    val animatedOffsetX2 by animateDpAsState(
+        targetValue = offsetX2,
+        animationSpec = tween(durationMillis = 300)
+    )
+    val animatedOffsetY2 by animateDpAsState(
+        targetValue = offsetY2,
+        animationSpec = tween(durationMillis = 300)
+    )
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .size(50.dp)
+                .offset(x = animatedOffsetX, y = animatedOffsetY)
+                .background(Color.Blue, CircleShape)
+                .clickable {
+                    if (offsetX == (-171.2).dp && offsetY == (50.2).dp){
+                        if (offsetX1 == (171.2).dp && offsetY1 == (-50.2).dp) {
+                            offsetX = (0).dp
+                            offsetY = (0).dp
+                            offsetX1 = (0).dp
+                            offsetY1 = (0).dp
+                        } else if (offsetX2 == (-171.2).dp && offsetY2 == (-50.2).dp) {
+                            offsetX = (0).dp
+                            offsetY = (0).dp
+                            offsetX2 = (-342.4).dp
+                            offsetY2 = (0).dp
+                        }
+
+                    } else if (offsetX == (171.2).dp && offsetY == (50.2).dp) {
+                        if (offsetX2 == (-171.2).dp && offsetY2 == (-50.2).dp){
+                            offsetX = (0).dp
+                            offsetY = (0).dp
+                            offsetX2 = (0).dp
+                            offsetY2 = (0).dp
+                        } else if (offsetX1 == (171.2).dp && offsetY1 == (-50.2).dp) {
+                            offsetX = (0).dp
+                            offsetY = (0).dp
+                            offsetX1 = (342.4).dp
+                            offsetY1 = (0).dp
+                        }
+
+                    }
+
+                }
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(50.dp)
+                    .offset(x = animatedOffsetX1, y = animatedOffsetY1)
+                    .background(Color.Green, CircleShape)
+                    .clickable {
+                        if (offsetX1 == 0.dp && offsetY1 == 0.dp){
+                            if (offsetX == 0.dp && offsetY == 0.dp) {
+                                offsetX1 = (171.2).dp
+                                offsetY1 = (-50.2).dp
+                                offsetX = (-171.2).dp
+                                offsetY = (50.2).dp
+                            } else if (offsetX2 == (-171.2).dp && offsetY2 == (-50.2).dp) {
+                                offsetX1 = (171.2).dp
+                                offsetY1 = (-50.2).dp
+                                offsetX2 = (-342.4).dp
+                                offsetY2 = (0).dp
+                            }
+
+                        } else if (offsetX1 == 342.4.dp && offsetY1 == 0.dp){
+                            if (offsetX == 0.dp && offsetY == 0.dp){
+                                offsetX1 = (171.2).dp
+                                offsetY1 = (-50.2).dp
+                                offsetX = (171.2).dp
+                                offsetY = (50.2).dp
+                            } else if (offsetX2 == (-171.2).dp && offsetY2 == (-50.2).dp) {
+                                offsetX1 = (171.2).dp
+                                offsetY1 = (-50.2).dp
+                                offsetX2 = (0).dp
+                                offsetY2 = (0).dp
+                            }
+
+                        }
+                    }
+            )
+            Box(
+                modifier = Modifier
+                    .size(50.dp)
+                    .offset(x = animatedOffsetX2, y = animatedOffsetY2)
+                    .background(Color.Yellow, CircleShape)
+                    .clickable {
+                        if (offsetX2 == 0.dp && offsetY2 == 0.dp){
+                            if (offsetX == 0.dp && offsetY == 0.dp) {
+                                offsetX2 = (-171.2).dp
+                                offsetY2 = (-50.2).dp
+                                offsetX = (171.2).dp
+                                offsetY = (50.2).dp
+                            } else if (offsetX1 == 171.2.dp && offsetY1 == (-50.2).dp) {
+                                offsetX2 = (-171.2).dp
+                                offsetY2 = (-50.2).dp
+                                offsetX1 = (342.4).dp
+                                offsetY1 = (0).dp
+                            }
+                        } else if (offsetX2 == (-342.4).dp && offsetY2 == 0.dp) {
+                            if (offsetX == 0.dp && offsetY == 0.dp){
+                                offsetX2 = (-171.2).dp
+                                offsetY2 = (-50.2).dp
+                                offsetX = (-171.2).dp
+                                offsetY = (50.2).dp
+                            } else if (offsetX1 == (171.2).dp && offsetY1 == (-50.2).dp) {
+                                offsetX2 = (-171.2).dp
+                                offsetY2 = (-50.2).dp
+                                offsetX1 = (0).dp
+                                offsetY1 = (0).dp
+                            }
+
+                        }
+                    }
+            )
+        }
+    }
+
+}
+@Composable
+fun MovingCircleDemo2() {
+    // Используем список для хранения состояний смещения кругов
+    val offsets = remember { mutableStateListOf(
+        mutableStateOf(Pair(0.dp, 0.dp)), // Circle 1
+        mutableStateOf(Pair(0.dp, 0.dp)), // Circle 2
+        mutableStateOf(Pair(0.dp, 0.dp))  // Circle 3
+    )}
+    // Функция для обновления смещений кругов
+    fun updateOffsets(clickedIndex: Int) {
+        val newOffsets = when (clickedIndex) {
+            0 -> listOf(
+                Pair(171.2.dp, 50.2.dp),
+                Pair(-171.2.dp, -50.2.dp),
+                Pair(-342.4.dp, 0.dp)
+            )
+            1 -> listOf(
+                Pair(171.2.dp, -50.2.dp),
+                Pair(-171.2.dp, 50.2.dp),
+                Pair(0.dp, 0.dp)
+            )
+            2 -> listOf(
+                Pair(-171.2.dp, -50.2.dp),
+                Pair(342.4.dp, 0.dp),
+                Pair(0.dp, 0.dp)
+            )
+            else -> offsets.map { it.value }
+        }
+        offsets.forEachIndexed { index, state ->
+            state.value = newOffsets[index]
+        }
+    }
+
+    // Общая функция для анимации
+    @Composable
+    fun animateCircle(index: Int, targetOffset: Pair<Dp, Dp>, durationMillis: Int = 300) {
+        val (targetX, targetY) = targetOffset
+        val animatedOffsetX by animateDpAsState(
+            targetValue = targetX,
+            animationSpec = tween(durationMillis = durationMillis)
+        )
+        val animatedOffsetY by animateDpAsState(
+            targetValue = targetY,
+            animationSpec = tween(durationMillis = durationMillis)
+        )
+
+        Box(
+            modifier = Modifier
+                .size(50.dp)
+                .offset(x = animatedOffsetX, y = animatedOffsetY)
+                .background(
+                    color = when (index) {
+                        0 -> Color.Blue
+                        1 -> Color.Green
+                        else -> Color.Yellow
+                    },
+                    shape = CircleShape
+                )
+                .clickable {
+                    updateOffsets(index)
+                }
+        )
+    }
+
+
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        animateCircle(0, offsets[0].value)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            animateCircle(1, offsets[1].value)
+            animateCircle(2, offsets[2].value)
+        }
+    }
 }

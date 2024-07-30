@@ -16,13 +16,22 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
+import com.huggydugy.wifistand.ui.screens.MovingCircleDemo
+import com.huggydugy.wifistand.ui.screens.MovingCircleDemo2
+import com.huggydugy.wifistand.ui.screens.MovingCirclesDemo
 import com.huggydugy.wifistand.ui.screens.ScaffoldScreen
 import com.huggydugy.wifistand.ui.theme.WIFIStandTheme
 
@@ -33,8 +42,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WIFIStandTheme {
-                val navController = rememberNavController()
-                ScaffoldScreen(navController = navController)
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    MovingCircleDemo2()
+                }
+
+//                val navController = rememberNavController()
+//                ScaffoldScreen(navController = navController)
             }
         }
     }
