@@ -70,7 +70,7 @@ fun ScaffoldScreen(
 ){
     Scaffold(
         bottomBar = {
-            CustomBottomAppBar(navController)
+            MovingCircleDemo()
         }
     ) {
         Box(modifier = Modifier.padding(it)){
@@ -256,40 +256,70 @@ fun MovingCircleDemo() {
         targetValue = offsetY2,
         animationSpec = tween(durationMillis = 300)
     )
+    var size by remember { mutableStateOf(70.dp) }
+    val animatedSize by animateDpAsState(
+        targetValue = size,
+        animationSpec = tween(durationMillis = 300)
+    )
+    var size1 by remember { mutableStateOf(50.dp) }
+    val animatedSize1 by animateDpAsState(
+        targetValue = size1,
+        animationSpec = tween(durationMillis = 300)
+    )
+    var size2 by remember { mutableStateOf(50.dp) }
+    val animatedSize2 by animateDpAsState(
+        targetValue = size2,
+        animationSpec = tween(durationMillis = 300)
+    )
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
             modifier = Modifier
-                .size(50.dp)
+                .size(animatedSize)
                 .offset(x = animatedOffsetX, y = animatedOffsetY)
                 .background(Color.Blue, CircleShape)
                 .clickable {
-                    if (offsetX == (-171.2).dp && offsetY == (50.2).dp){
-                        if (offsetX1 == (171.2).dp && offsetY1 == (-50.2).dp) {
+                    size = 70.dp
+                    size1 = 50.dp
+                    size2 = 50.dp
+                    if (offsetX == (-156.2).dp && offsetY == (50.2).dp) {
+                        if (offsetX1 == (156.2).dp && offsetY1 == (-50.2).dp) {
                             offsetX = (0).dp
                             offsetY = (0).dp
                             offsetX1 = (0).dp
                             offsetY1 = (0).dp
-                        } else if (offsetX2 == (-171.2).dp && offsetY2 == (-50.2).dp) {
+                            size = 70.dp
+                            size1 = 50.dp
+                            size2 = 50.dp
+                        } else if (offsetX2 == (-156.2).dp && offsetY2 == (-50.2).dp) {
                             offsetX = (0).dp
                             offsetY = (0).dp
-                            offsetX2 = (-342.4).dp
+                            offsetX2 = (-312.4).dp
                             offsetY2 = (0).dp
+                            size = 70.dp
+                            size1 = 50.dp
+                            size2 = 50.dp
                         }
 
-                    } else if (offsetX == (171.2).dp && offsetY == (50.2).dp) {
-                        if (offsetX2 == (-171.2).dp && offsetY2 == (-50.2).dp){
+                    } else if (offsetX == (156.2).dp && offsetY == (50.2).dp) {
+                        if (offsetX2 == (-156.2).dp && offsetY2 == (-50.2).dp) {
                             offsetX = (0).dp
                             offsetY = (0).dp
                             offsetX2 = (0).dp
                             offsetY2 = (0).dp
-                        } else if (offsetX1 == (171.2).dp && offsetY1 == (-50.2).dp) {
+                            size = 70.dp
+                            size1 = 50.dp
+                            size2 = 50.dp
+                        } else if (offsetX1 == (156.2).dp && offsetY1 == (-50.2).dp) {
                             offsetX = (0).dp
                             offsetY = (0).dp
-                            offsetX1 = (342.4).dp
+                            offsetX1 = (312.4).dp
                             offsetY1 = (0).dp
+                            size = 70.dp
+                            size1 = 50.dp
+                            size2 = 50.dp
                         }
 
                     }
@@ -297,39 +327,50 @@ fun MovingCircleDemo() {
                 }
         )
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)
+                .padding(bottom = 30.dp, start = 15.dp, end = 15.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Box(
                 modifier = Modifier
-                    .size(50.dp)
+                    .size(animatedSize1)
                     .offset(x = animatedOffsetX1, y = animatedOffsetY1)
                     .background(Color.Green, CircleShape)
                     .clickable {
-                        if (offsetX1 == 0.dp && offsetY1 == 0.dp){
+                        if (offsetX1 == 0.dp && offsetY1 == 0.dp) {
                             if (offsetX == 0.dp && offsetY == 0.dp) {
-                                offsetX1 = (171.2).dp
+                                offsetX1 = (156.2).dp
                                 offsetY1 = (-50.2).dp
-                                offsetX = (-171.2).dp
+                                offsetX = (-156.2).dp
                                 offsetY = (50.2).dp
-                            } else if (offsetX2 == (-171.2).dp && offsetY2 == (-50.2).dp) {
-                                offsetX1 = (171.2).dp
+                                size = 50.dp
+                                size1 = 70.dp
+                            } else if (offsetX2 == (-156.2).dp && offsetY2 == (-50.2).dp) {
+                                offsetX1 = (156.2).dp
                                 offsetY1 = (-50.2).dp
-                                offsetX2 = (-342.4).dp
+                                offsetX2 = (-312.4).dp
                                 offsetY2 = (0).dp
+                                size1 = 70.dp
+                                size2 = 50.dp
                             }
 
-                        } else if (offsetX1 == 342.4.dp && offsetY1 == 0.dp){
-                            if (offsetX == 0.dp && offsetY == 0.dp){
-                                offsetX1 = (171.2).dp
+                        } else if (offsetX1 == 312.4.dp && offsetY1 == 0.dp) {
+                            if (offsetX == 0.dp && offsetY == 0.dp) {
+                                offsetX1 = (156.2).dp
                                 offsetY1 = (-50.2).dp
-                                offsetX = (171.2).dp
+                                offsetX = (156.2).dp
                                 offsetY = (50.2).dp
-                            } else if (offsetX2 == (-171.2).dp && offsetY2 == (-50.2).dp) {
-                                offsetX1 = (171.2).dp
+                                size1 = 70.dp
+                                size = 50.dp
+                            } else if (offsetX2 == (-156.2).dp && offsetY2 == (-50.2).dp) {
+                                offsetX1 = (156.2).dp
                                 offsetY1 = (-50.2).dp
                                 offsetX2 = (0).dp
                                 offsetY2 = (0).dp
+                                size1 = 70.dp
+                                size2 = 50.dp
                             }
 
                         }
@@ -337,33 +378,41 @@ fun MovingCircleDemo() {
             )
             Box(
                 modifier = Modifier
-                    .size(50.dp)
+                    .size(animatedSize2)
                     .offset(x = animatedOffsetX2, y = animatedOffsetY2)
                     .background(Color.Yellow, CircleShape)
                     .clickable {
-                        if (offsetX2 == 0.dp && offsetY2 == 0.dp){
+                        if (offsetX2 == 0.dp && offsetY2 == 0.dp) {
                             if (offsetX == 0.dp && offsetY == 0.dp) {
-                                offsetX2 = (-171.2).dp
+                                offsetX2 = (-156.2).dp
                                 offsetY2 = (-50.2).dp
-                                offsetX = (171.2).dp
+                                offsetX = (156.2).dp
                                 offsetY = (50.2).dp
-                            } else if (offsetX1 == 171.2.dp && offsetY1 == (-50.2).dp) {
-                                offsetX2 = (-171.2).dp
+                                size2 = 70.dp
+                                size = 50.dp
+                            } else if (offsetX1 == 156.2.dp && offsetY1 == (-50.2).dp) {
+                                offsetX2 = (-156.2).dp
                                 offsetY2 = (-50.2).dp
-                                offsetX1 = (342.4).dp
+                                offsetX1 = (312.4).dp
                                 offsetY1 = (0).dp
+                                size2 = 70.dp
+                                size1 = 50.dp
                             }
-                        } else if (offsetX2 == (-342.4).dp && offsetY2 == 0.dp) {
-                            if (offsetX == 0.dp && offsetY == 0.dp){
-                                offsetX2 = (-171.2).dp
+                        } else if (offsetX2 == (-312.4).dp && offsetY2 == 0.dp) {
+                            if (offsetX == 0.dp && offsetY == 0.dp) {
+                                offsetX2 = (-156.2).dp
                                 offsetY2 = (-50.2).dp
-                                offsetX = (-171.2).dp
+                                offsetX = (-156.2).dp
                                 offsetY = (50.2).dp
-                            } else if (offsetX1 == (171.2).dp && offsetY1 == (-50.2).dp) {
-                                offsetX2 = (-171.2).dp
+                                size2 = 70.dp
+                                size = 50.dp
+                            } else if (offsetX1 == (156.2).dp && offsetY1 == (-50.2).dp) {
+                                offsetX2 = (-156.2).dp
                                 offsetY2 = (-50.2).dp
                                 offsetX1 = (0).dp
                                 offsetY1 = (0).dp
+                                size2 = 70.dp
+                                size1 = 50.dp
                             }
 
                         }
@@ -372,83 +421,4 @@ fun MovingCircleDemo() {
         }
     }
 
-}
-@Composable
-fun MovingCircleDemo2() {
-    // Используем список для хранения состояний смещения кругов
-    val offsets = remember { mutableStateListOf(
-        mutableStateOf(Pair(0.dp, 0.dp)), // Circle 1
-        mutableStateOf(Pair(0.dp, 0.dp)), // Circle 2
-        mutableStateOf(Pair(0.dp, 0.dp))  // Circle 3
-    )}
-    // Функция для обновления смещений кругов
-    fun updateOffsets(clickedIndex: Int) {
-        val newOffsets = when (clickedIndex) {
-            0 -> listOf(
-                Pair(171.2.dp, 50.2.dp),
-                Pair(-171.2.dp, -50.2.dp),
-                Pair(-342.4.dp, 0.dp)
-            )
-            1 -> listOf(
-                Pair(171.2.dp, -50.2.dp),
-                Pair(-171.2.dp, 50.2.dp),
-                Pair(0.dp, 0.dp)
-            )
-            2 -> listOf(
-                Pair(-171.2.dp, -50.2.dp),
-                Pair(342.4.dp, 0.dp),
-                Pair(0.dp, 0.dp)
-            )
-            else -> offsets.map { it.value }
-        }
-        offsets.forEachIndexed { index, state ->
-            state.value = newOffsets[index]
-        }
-    }
-
-    // Общая функция для анимации
-    @Composable
-    fun animateCircle(index: Int, targetOffset: Pair<Dp, Dp>, durationMillis: Int = 300) {
-        val (targetX, targetY) = targetOffset
-        val animatedOffsetX by animateDpAsState(
-            targetValue = targetX,
-            animationSpec = tween(durationMillis = durationMillis)
-        )
-        val animatedOffsetY by animateDpAsState(
-            targetValue = targetY,
-            animationSpec = tween(durationMillis = durationMillis)
-        )
-
-        Box(
-            modifier = Modifier
-                .size(50.dp)
-                .offset(x = animatedOffsetX, y = animatedOffsetY)
-                .background(
-                    color = when (index) {
-                        0 -> Color.Blue
-                        1 -> Color.Green
-                        else -> Color.Yellow
-                    },
-                    shape = CircleShape
-                )
-                .clickable {
-                    updateOffsets(index)
-                }
-        )
-    }
-
-
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        animateCircle(0, offsets[0].value)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            animateCircle(1, offsets[1].value)
-            animateCircle(2, offsets[2].value)
-        }
-    }
 }

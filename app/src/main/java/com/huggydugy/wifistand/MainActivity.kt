@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.huggydugy.wifistand.ui.screens.MovingCircleDemo
-import com.huggydugy.wifistand.ui.screens.MovingCircleDemo2
 import com.huggydugy.wifistand.ui.screens.MovingCirclesDemo
 import com.huggydugy.wifistand.ui.screens.ScaffoldScreen
 import com.huggydugy.wifistand.ui.theme.WIFIStandTheme
@@ -42,16 +41,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WIFIStandTheme {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    MovingCircleDemo2()
-                }
-
-//                val navController = rememberNavController()
-//                ScaffoldScreen(navController = navController)
+                val navController = rememberNavController()
+                ScaffoldScreen(navController = navController)
             }
         }
     }
