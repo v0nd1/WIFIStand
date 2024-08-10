@@ -2,9 +2,11 @@ package com.huggydugy.wifistand.ui.screens
 
 import android.icu.text.IDNA.Info
 import android.util.Log
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateValueAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -23,9 +25,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -46,7 +52,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -62,7 +71,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.huggydugy.wifistand.ui.navgraph.NavHostApp
 import com.huggydugy.wifistand.ui.navgraph.Screen
-import com.huggydugy.wifistand.ui.theme.Purple40
+import com.huggydugy.wifistand.ui.theme.Green
+
+
+
 
 @Composable
 fun ScaffoldScreen(
@@ -193,45 +205,35 @@ private fun RowScope.AddItem(
         },
     )
 }
-@Composable
-fun MovingCirclesDemo() {
-    val positions = listOf(
-        0.dp to 0.dp,  // Top position
-        100.dp to 0.dp, // Right position
-        100.dp to 100.dp, // Bottom position
-        0.dp to 100.dp // Left position
-    )
-
-    var circlePositions by remember { mutableStateOf(listOf(0, 1, 2, 3)) }
-
-    fun moveCircles() {
-        circlePositions = circlePositions.map { (it + 1) % 4 }
-    }
-
-    circlePositions.forEachIndexed { index, positionIndex ->
-        val (x, y) = positions[positionIndex]
-        val animatedOffsetX by animateDpAsState(targetValue = x, animationSpec = tween(durationMillis = 300))
-        val animatedOffsetY by animateDpAsState(targetValue = y, animationSpec = tween(durationMillis = 300))
-
-        Box(
-            modifier = Modifier
-                .size(50.dp)
-                .offset(x = animatedOffsetX, y = animatedOffsetY)
-                .clip(RoundedCornerShape(100))
-                .background(Color.Blue)
-                .clickable { moveCircles() }
-        )
-    }
-}
 
 @Composable
 fun MovingCircleDemo() {
-    var offsetX by remember { mutableStateOf(0.dp) }
-    var offsetY by remember { mutableStateOf(0.dp) }
-    var offsetX1 by remember { mutableStateOf(0.dp) }
-    var offsetY1 by remember { mutableStateOf(0.dp) }
-    var offsetX2 by remember { mutableStateOf(0.dp) }
-    var offsetY2 by remember { mutableStateOf(0.dp) }
+    val bottom = 0.dp
+    val top = (-50.2).dp
+
+    val xTop = (0).dp
+    val xStart = (-166).dp
+    val xEnd = (166).dp
+
+
+    val x1Start = 15.dp
+    val x1EndTop = (160).dp
+    val x1EndNext = (328).dp
+
+    val x2Start = (-328).dp
+    val x2End = (-15).dp
+    val x2StartTop = (-160).dp
+
+    val small = 50.dp
+    val big = 70.dp
+
+    var offsetX by remember { mutableStateOf(xTop) }
+    var offsetY by remember { mutableStateOf(top) }
+    var offsetX1 by remember { mutableStateOf(x1Start) }
+    var offsetY1 by remember { mutableStateOf(bottom) }
+    var offsetX2 by remember { mutableStateOf(x2End) }
+    var offsetY2 by remember { mutableStateOf(bottom) }
+
     val animatedOffsetX by animateDpAsState(
         targetValue = offsetX,
         animationSpec = tween(durationMillis = 300)
@@ -271,152 +273,260 @@ fun MovingCircleDemo() {
         targetValue = size2,
         animationSpec = tween(durationMillis = 300)
     )
+    val bigIcon by remember {
+        mutableStateOf(size == 70.dp)
+    }
+    val bigIcon1 by remember {
+        mutableStateOf(size1 == 70.dp)
+    }
+    val bigIcon2 by remember {
+        mutableStateOf(size2 == 70.dp)
+    }
+    var sizeIc by remember { mutableStateOf(if (bigIcon) 50.dp else 30.dp) }
+    var sizeIc1 by remember { mutableStateOf(if (bigIcon1) 50.dp else 30.dp) }
+    var sizeIc2 by remember { mutableStateOf(if (bigIcon2) 50.dp else 30.dp) }
+    val animatedSizeIcon by animateDpAsState(
+        targetValue = sizeIc,
+        animationSpec = tween(durationMillis = 300)
+    )
+    val animatedSizeIcon1 by animateDpAsState(
+        targetValue = sizeIc1,
+        animationSpec = tween(durationMillis = 300)
+    )
+    val animatedSizeIcon2 by animateDpAsState(
+        targetValue = sizeIc2,
+        animationSpec = tween(durationMillis = 300)
+    )
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(
+                bottom = 30.dp,
+            ),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
+        // ГРИН
+        Box(
+            modifier = Modifier
+                .size(animatedSize1)
+                .offset(x = animatedOffsetX1, y = animatedOffsetY1)
+                .clip(RoundedCornerShape(100))
+                .background(Green)
+                .clickable {
+                    if (offsetX1 == x1Start && offsetY1 == bottom) {
+                        if (offsetX == xTop && offsetY == top) {
+                            offsetX1 = x1EndTop
+                            offsetY1 = top
+                            offsetX = xStart
+                            offsetY = bottom
+                            size = small
+                            size1 = big
+                            sizeIc = 30.dp
+                            sizeIc1 = 50.dp
+                        } else if (offsetX2 == x2StartTop && offsetY2 == top) {
+                            offsetX1 = x1EndTop
+                            offsetY1 = top
+                            offsetX2 = x2Start
+                            offsetY2 = bottom
+                            offsetX = 146.dp
+                            size1 = big
+                            size2 = small
+                            sizeIc1 = 50.dp
+                            sizeIc2 = 30.dp
+                        }
+
+                    } else if (offsetX1 == x1EndNext && offsetY1 == bottom) {
+                        if (offsetX == xTop && offsetY == top) {
+                            offsetX1 = x1EndTop
+                            offsetY1 = top
+                            offsetX = 146.dp
+                            offsetY = bottom
+                            size1 = big
+                            size = small
+                            sizeIc1 = 50.dp
+                            sizeIc = 30.dp
+                        } else if (offsetX2 == x2StartTop && offsetY2 == top) {
+                            offsetX1 = x1EndTop
+                            offsetY1 = top
+                            offsetX2 = x2End
+                            offsetY2 = bottom
+                            offsetX = xStart
+                            size1 = big
+                            size2 = small
+                            sizeIc1 = 50.dp
+                            sizeIc2 = 30.dp
+                        }
+
+                    }
+                    Log.d(
+                        "Here",
+                        "blue = $offsetX $offsetY green = $offsetX1 $offsetY1 yellow = $offsetX2 $offsetY2\n" +
+                                "icon size blue = $animatedSizeIcon green = $animatedSizeIcon1 yellow = $animatedSizeIcon2"
+                    )
+                },
+            contentAlignment = Alignment.Center
+        ){
+
+            Icon(
+                imageVector = Icons.Default.Edit,
+                contentDescription = null,
+                modifier = Modifier.size(animatedSizeIcon1),
+                tint = White
+            )
+        }
+
+
+        // БЛЮ
         Box(
             modifier = Modifier
                 .size(animatedSize)
                 .offset(x = animatedOffsetX, y = animatedOffsetY)
-                .background(Color.Blue, CircleShape)
+                .clip(RoundedCornerShape(100))
+                .background(Green)
                 .clickable {
-                    size = 70.dp
-                    size1 = 50.dp
-                    size2 = 50.dp
-                    if (offsetX == (-156.2).dp && offsetY == (50.2).dp) {
-                        if (offsetX1 == (156.2).dp && offsetY1 == (-50.2).dp) {
-                            offsetX = (0).dp
-                            offsetY = (0).dp
-                            offsetX1 = (0).dp
-                            offsetY1 = (0).dp
-                            size = 70.dp
-                            size1 = 50.dp
-                            size2 = 50.dp
-                        } else if (offsetX2 == (-156.2).dp && offsetY2 == (-50.2).dp) {
-                            offsetX = (0).dp
-                            offsetY = (0).dp
-                            offsetX2 = (-312.4).dp
-                            offsetY2 = (0).dp
-                            size = 70.dp
-                            size1 = 50.dp
-                            size2 = 50.dp
+                    if (offsetX == xEnd && offsetY == bottom || offsetX == 146.dp) {
+                        if (offsetX1 == x1EndTop && offsetY1 == top) {
+                            offsetX = xTop
+                            offsetY = top
+                            offsetX1 = x1EndNext
+                            offsetY1 = bottom
+                            size = big
+                            size1 = small
+                            sizeIc = 50.dp
+                            sizeIc1 = 30.dp
+                        } else if (offsetX2 == x2StartTop && offsetY2 == top) {
+                            offsetX = xTop
+                            offsetY = top
+                            offsetX2 = x2End
+                            offsetY2 = bottom
+                            size = big
+                            size2 = small
+                            sizeIc = 50.dp
+                            sizeIc2 = 30.dp
                         }
 
-                    } else if (offsetX == (156.2).dp && offsetY == (50.2).dp) {
-                        if (offsetX2 == (-156.2).dp && offsetY2 == (-50.2).dp) {
-                            offsetX = (0).dp
-                            offsetY = (0).dp
-                            offsetX2 = (0).dp
-                            offsetY2 = (0).dp
-                            size = 70.dp
-                            size1 = 50.dp
-                            size2 = 50.dp
-                        } else if (offsetX1 == (156.2).dp && offsetY1 == (-50.2).dp) {
-                            offsetX = (0).dp
-                            offsetY = (0).dp
-                            offsetX1 = (312.4).dp
-                            offsetY1 = (0).dp
-                            size = 70.dp
-                            size1 = 50.dp
-                            size2 = 50.dp
+                    } else if (offsetX == xStart && offsetY == bottom || offsetX == -146.dp) {
+                        if (offsetX2 == x2StartTop && offsetY2 == top) {
+                            offsetX = xTop
+                            offsetY = top
+                            offsetX2 = x2Start
+                            offsetY2 = bottom
+                            size = big
+                            size2 = small
+                            sizeIc = 50.dp
+                            sizeIc2 = 30.dp
+                        } else if (offsetX1 == x1EndTop && offsetY1 == top) {
+                            offsetX = xTop
+                            offsetY = top
+                            offsetX1 = x1Start
+                            offsetY1 = bottom
+                            size = big
+                            size1 = small
+                            sizeIc = 50.dp
+                            sizeIc1 = 30.dp
                         }
 
+                    } else if (offsetX == xEnd && offsetY == bottom) {
+                        if (offsetX2 == x2StartTop && offsetY2 == top) {
+                            offsetX = xTop
+                            offsetY = top
+                            offsetX2 = x2End
+                            offsetY2 = bottom
+                            size = big
+                            size2 = small
+                            sizeIc = 50.dp
+                            sizeIc2 = 30.dp
+                        }
                     }
+                    Log.d(
+                        "Here",
+                        "blue = $offsetX $offsetY green = $offsetX1 $offsetY1 yellow = $offsetX2 $offsetY2\n" +
+                                "icon size blue = $animatedSizeIcon green = $animatedSizeIcon1 yellow = $animatedSizeIcon2"
+                    )
 
-                }
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .padding(bottom = 30.dp, start = 15.dp, end = 15.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Box(
+                },
+            contentAlignment = Alignment.Center
+        ){
+
+
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = null,
+                tint = White,
                 modifier = Modifier
-                    .size(animatedSize1)
-                    .offset(x = animatedOffsetX1, y = animatedOffsetY1)
-                    .background(Color.Green, CircleShape)
-                    .clickable {
-                        if (offsetX1 == 0.dp && offsetY1 == 0.dp) {
-                            if (offsetX == 0.dp && offsetY == 0.dp) {
-                                offsetX1 = (156.2).dp
-                                offsetY1 = (-50.2).dp
-                                offsetX = (-156.2).dp
-                                offsetY = (50.2).dp
-                                size = 50.dp
-                                size1 = 70.dp
-                            } else if (offsetX2 == (-156.2).dp && offsetY2 == (-50.2).dp) {
-                                offsetX1 = (156.2).dp
-                                offsetY1 = (-50.2).dp
-                                offsetX2 = (-312.4).dp
-                                offsetY2 = (0).dp
-                                size1 = 70.dp
-                                size2 = 50.dp
-                            }
-
-                        } else if (offsetX1 == 312.4.dp && offsetY1 == 0.dp) {
-                            if (offsetX == 0.dp && offsetY == 0.dp) {
-                                offsetX1 = (156.2).dp
-                                offsetY1 = (-50.2).dp
-                                offsetX = (156.2).dp
-                                offsetY = (50.2).dp
-                                size1 = 70.dp
-                                size = 50.dp
-                            } else if (offsetX2 == (-156.2).dp && offsetY2 == (-50.2).dp) {
-                                offsetX1 = (156.2).dp
-                                offsetY1 = (-50.2).dp
-                                offsetX2 = (0).dp
-                                offsetY2 = (0).dp
-                                size1 = 70.dp
-                                size2 = 50.dp
-                            }
-
-                        }
-                    }
+                    .size(animatedSizeIcon)
             )
-            Box(
-                modifier = Modifier
-                    .size(animatedSize2)
-                    .offset(x = animatedOffsetX2, y = animatedOffsetY2)
-                    .background(Color.Yellow, CircleShape)
-                    .clickable {
-                        if (offsetX2 == 0.dp && offsetY2 == 0.dp) {
-                            if (offsetX == 0.dp && offsetY == 0.dp) {
-                                offsetX2 = (-156.2).dp
-                                offsetY2 = (-50.2).dp
-                                offsetX = (156.2).dp
-                                offsetY = (50.2).dp
-                                size2 = 70.dp
-                                size = 50.dp
-                            } else if (offsetX1 == 156.2.dp && offsetY1 == (-50.2).dp) {
-                                offsetX2 = (-156.2).dp
-                                offsetY2 = (-50.2).dp
-                                offsetX1 = (312.4).dp
-                                offsetY1 = (0).dp
-                                size2 = 70.dp
-                                size1 = 50.dp
-                            }
-                        } else if (offsetX2 == (-312.4).dp && offsetY2 == 0.dp) {
-                            if (offsetX == 0.dp && offsetY == 0.dp) {
-                                offsetX2 = (-156.2).dp
-                                offsetY2 = (-50.2).dp
-                                offsetX = (-156.2).dp
-                                offsetY = (50.2).dp
-                                size2 = 70.dp
-                                size = 50.dp
-                            } else if (offsetX1 == (156.2).dp && offsetY1 == (-50.2).dp) {
-                                offsetX2 = (-156.2).dp
-                                offsetY2 = (-50.2).dp
-                                offsetX1 = (0).dp
-                                offsetY1 = (0).dp
-                                size2 = 70.dp
-                                size1 = 50.dp
-                            }
+        }
 
+        // ЕЛЛОУ
+        Box(
+            modifier = Modifier
+                .size(animatedSize2)
+                .offset(x = animatedOffsetX2, y = animatedOffsetY2)
+                .clip(RoundedCornerShape(100))
+                .background(Green)
+                .clickable {
+                    if (offsetX2 == x2End && offsetY2 == bottom) {
+                        if (offsetX == xTop && offsetY == top) {
+                            offsetX2 = x2StartTop
+                            offsetY2 = top
+                            offsetX = xEnd
+                            offsetY = bottom
+                            size2 = big
+                            size = small
+                            sizeIc2 = 50.dp
+                            sizeIc = 30.dp
+                        } else if (offsetX1 == x1EndTop && offsetY1 == top) {
+                            offsetX2 = x2StartTop
+                            offsetY2 = top
+                            offsetX1 = x1EndNext
+                            offsetY1 = bottom
+                            offsetX = -146.dp
+                            size2 = big
+                            size1 = small
+                            sizeIc2 = 50.dp
+                            sizeIc1 = 30.dp
                         }
+                    } else if (offsetX2 == x2Start && offsetY2 == bottom) {
+                        if (offsetX == xTop && offsetY == top) {
+                            offsetX2 = x2StartTop
+                            offsetY2 = top
+                            offsetX = -146.dp
+                            offsetY = bottom
+                            size2 = big
+                            size = small
+                            sizeIc2 = 50.dp
+                            sizeIc = 30.dp
+                        } else if (offsetX1 == x1EndTop && offsetY1 == top) {
+                            offsetX2 = x2StartTop
+                            offsetY2 = top
+                            offsetX1 = x1Start
+                            offsetY1 = bottom
+                            offsetX = xEnd
+                            size2 = big
+                            size1 = small
+                            sizeIc2 = 50.dp
+                            sizeIc1 = 30.dp
+                        }
+
                     }
+                    Log.d(
+                        "Here",
+                        "blue = $offsetX $offsetY green = $offsetX1 $offsetY1 yellow = $offsetX2 $offsetY2 \n" +
+                                "icon size blue = $animatedSizeIcon green = $animatedSizeIcon1 yellow = $animatedSizeIcon2"
+                    )
+
+                },
+            contentAlignment = Alignment.Center
+        ){
+
+            Icon(
+                imageVector = Icons.Default.Build,
+                contentDescription = null,
+                tint = White,
+                modifier = Modifier.size(animatedSizeIcon2)
             )
         }
     }
